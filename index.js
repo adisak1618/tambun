@@ -9,7 +9,6 @@ const config = {
   channelSecret: process.env.channelSecret,
 };
 
-console.log('fuck', config);
 // create LINE SDK client
 const client = new line.Client(config);
 
