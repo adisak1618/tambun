@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     nickname: DataTypes.STRING,
     tel: DataTypes.STRING,
     address: DataTypes.TEXT,
+    follow: DataTypes.BOOLEAN,
     birtday: DataTypes.DATE,
     gender: {
       type:   Sequelize.ENUM,

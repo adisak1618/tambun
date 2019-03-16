@@ -17,6 +17,9 @@ module.exports = {
       tel: {
         type: Sequelize.STRING
       },
+      follow: {
+        type: Sequelize.BOOLEAN,
+      },
       address: {
         type: Sequelize.TEXT
       },
