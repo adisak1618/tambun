@@ -27,8 +27,8 @@ app.post('/callback', line.middleware(config), (req, res) => {
 
 // listen on port
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`listening on ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`listening on ${port}`);
+// });
 
 module.exports = app;
