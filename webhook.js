@@ -159,7 +159,7 @@ const flex1 = {
 module.exports = (event) => {
   console.log('event log', event);
   if (event.type === 'follow') {
-    const echo = [{ type: 'text', text: 'สวัสดีครับ เราทำให้การสะสมคะแนนเป็นเรื่องง่าย' }, { type: 'text', text: 'เริ่มเก็บคะแนนกับเรา' }, flex1];
+    const echo = [{ type: 'text', text: 'สวัสดีครับ เราทำให้การสะสมคะแนนเป็นเรื่องง่าย' }, { type: 'text', text: 'เริ่มเก็บคะแนนกับเรา' }];
     return client.replyMessage(event.replyToken, echo);
   } else if (event.type === 'message') {
     return client.replyMessage(event.replyToken, flex1);
