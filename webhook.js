@@ -27,13 +27,34 @@ const flex1 = {
   }
 };
 
+const template1 = {
+  "type": "template",
+  "altText": "this is a confirm template",
+  "template": {
+      "type": "confirm",
+      "text": "Are you sure?",
+      "actions": [
+          {
+            "type": "message",
+            "label": "Yes",
+            "text": "yes"
+          },
+          {
+            "type": "message",
+            "label": "No",
+            "text": "no"
+          }
+      ]
+  }
+};
+
 module.exports = (event) => {
   console.log('event log', event);
   if (event.type === 'follow') {
     const echo = [{ type: 'text', text: 'สวัสดีครับ เราทำให้การสะสมคะแนนเป็นเรื่องง่าย' }, { type: 'text', text: 'เริ่มเก็บคะแนนกับเรา' }];
     return client.replyMessage(event.replyToken, echo);
   } else if (event.type === 'message') {
-    return client.replyMessage(event.replyToken, flex1);
+    return client.replyMessage(event.replyToken, [flex1, template1]);
   } else {
     return Promise.resolve(null);
   }
