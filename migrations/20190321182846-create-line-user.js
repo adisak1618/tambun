@@ -1,29 +1,17 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('actions', {
+    return queryInterface.createTable('line_users', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      job: {
-        type: Sequelize.STRING
-      },
-      success: {
-        type: Sequelize.BOOLEAN
-      },
-      line_user_id: {
+      user_id: {
         type: Sequelize.INTEGER
       },
-      step: {
-        type: Sequelize.INTEGER
-      },
-      data: {
-        type: Sequelize.JSONB
-      },
-      next: {
+      lineid: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -37,6 +25,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('actions');
+    return queryInterface.dropTable('line_users');
   }
 };

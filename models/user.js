@@ -8,13 +8,14 @@ module.exports = (sequelize, DataTypes) => {
     follow: DataTypes.BOOLEAN,
     birtday: DataTypes.DATE,
     gender: {
-      type:   Sequelize.ENUM,
+      type:   DataTypes.ENUM,
       values: ['f', 'm', 'o']
     },
     estimate_age: DataTypes.INTEGER
   }, {});
   user.associate = function(models) {
     // associations can be defined here
+    models.user.hasOne(models.line_user, { as: 'lineUser', foreignKey: 'user_id', targetKey: 'id' })
   };
   return user;
 };

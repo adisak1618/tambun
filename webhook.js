@@ -1,204 +1,67 @@
-const line = require('@line/bot-sdk');
-const config = require('./config');
-
-
+const { replyMessage } = require('./helper');
+const models = require('./models');
+const handler = require('./handler');
+const mainMenuMsg = require('./components/message/mainmenu');
+const testmenu = require('./components/actionMenu');
 // create LINE SDK client
-const client = new line.Client(config);
 
-const flex1 = {  
-  "type": "flex",
-  "altText": "this is a flex message",
-  "contents": {
-    "type": "bubble",
-    "hero": {
-      "type": "image",
-      "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
-      "size": "full",
-      "aspectRatio": "20:13",
-      "aspectMode": "cover",
-      "action": {
-        "type": "uri",
-        "uri": "http://linecorp.com/"
+module.exports = async (event) => {
+  console.log('event log', event);
+  const [user, created] = await models.line_user.findOrCreate({
+    where: {
+      lineid: event.source.userId,
+    },
+    include: [{
+      model: models.user,
+      as: 'user',
+    }],
+    defaults: {
+      lineid: event.source.userId,
+    }
+  })
+
+  if (event.type === 'follow') {
+    const echo = [mainMenuMsg, { type: 'text', text: 'เริ่มเก็บคะแนนกับเรา' }];
+    return replyMessage(event.replyToken, echo);
+  } else {
+    var custom_order = Object.keys(handler).reverse();
+    const data = await models.action.findAndCountAll({
+      where: {
+        success: false,
+      },
+      // raw: true,
+    })
+
+    data.rows.sort((back, front) => {
+      const backorder = custom_order.indexOf(back.job);
+      const frontorder = custom_order.indexOf(front.job);
+      return frontorder - backorder;
+    });
+
+    if(data.count > 0) {
+      const action = data.rows[0];
+      return handler[action.job](event, action, user)
+    } else {
+      if(event.type === 'postback') {
+        const name = event.postback.data;
+        if (name in handler) {
+          // const action = await models.action.create({
+          //   job: name,
+          //   success: false,
+          //   step: 0,
+          //   line_user_id: user.id,
+          // })
+          handler[name](event, null, user)
+        } else {
+          return replyMessage(event.replyToken, [{ type: 'text', text: 'บางอย่างเกิดผิดพลาด' }, mainMenuMsg]);
+        }
+      } else {
+        if (user) {
+          return replyMessage(event.replyToken, mainMenuMsg);
+        } else {
+          return replyMessage(event.replyToken, mainMenuMsg);
+        }
       }
-    },
-    "body": {
-      "type": "box",
-      "layout": "vertical",
-      "contents": [
-        {
-          "type": "text",
-          "text": "Brown Cafe",
-          "weight": "bold",
-          "size": "xl"
-        },
-        {
-          "type": "box",
-          "layout": "baseline",
-          "margin": "md",
-          "contents": [
-            {
-              "type": "icon",
-              "size": "sm",
-              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-            },
-            {
-              "type": "icon",
-              "size": "sm",
-              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-            },
-            {
-              "type": "icon",
-              "size": "sm",
-              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-            },
-            {
-              "type": "icon",
-              "size": "sm",
-              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-            },
-            {
-              "type": "icon",
-              "size": "sm",
-              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png"
-            },
-            {
-              "type": "text",
-              "text": "4.0",
-              "size": "sm",
-              "color": "#999999",
-              "margin": "md",
-              "flex": 0
-            }
-          ]
-        },
-        {
-          "type": "box",
-          "layout": "vertical",
-          "margin": "lg",
-          "spacing": "sm",
-          "contents": [
-            {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "Place",
-                  "color": "#aaaaaa",
-                  "size": "sm",
-                  "flex": 1
-                },
-                {
-                  "type": "text",
-                  "text": "Miraina Tower, 4-1-6 Shinjuku, Tokyo",
-                  "wrap": true,
-                  "color": "#666666",
-                  "size": "sm",
-                  "flex": 5
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "Time",
-                  "color": "#aaaaaa",
-                  "size": "sm",
-                  "flex": 1
-                },
-                {
-                  "type": "text",
-                  "text": "10:00 - 23:00",
-                  "wrap": true,
-                  "color": "#666666",
-                  "size": "sm",
-                  "flex": 5
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    "footer": {
-      "type": "box",
-      "layout": "vertical",
-      "spacing": "sm",
-      "contents": [
-        {
-          "type": "button",
-          "style": "link",
-          "height": "sm",
-          "action": {
-            "type": "uri",
-            "label": "CALL",
-            "uri": "https://linecorp.com"
-          }
-        },
-        {
-          "type": "button",
-          "style": "link",
-          "height": "sm",
-          "action": {
-            "type": "uri",
-            "label": "WEBSITE",
-            "uri": "https://linecorp.com"
-          }
-        },
-        {
-          "type": "spacer",
-          "size": "sm"
-        }
-      ],
-      "flex": 0
     }
   }
-};
-
-const template1 = {
-  "type": "template",
-  "altText": "this is a confirm template",
-  "template": {
-      "type": "confirm",
-      "text": "Are you sure?",
-      "actions": [
-          {
-            "type": "message",
-            "label": "Yes",
-            "text": "yes"
-          },
-          {
-            "type": "message",
-            "label": "No",
-            "text": "no"
-          }
-      ]
-  }
-};
-
-module.exports = (event) => {
-  console.log('event log', event);
-  if (event.type === 'follow') {
-    const echo = [{ type: 'text', text: 'สวัสดีครับ เราทำให้การสะสมคะแนนเป็นเรื่องง่าย' }, { type: 'text', text: 'เริ่มเก็บคะแนนกับเรา' }];
-    return client.replyMessage(event.replyToken, echo);
-  } else if (event.type === 'message') {
-    return client.replyMessage(event.replyToken, [flex1, template1]);
-  } else {
-    return Promise.resolve(null);
-  }
-  // if (event.type !== 'message' || event.message.type !== 'text') {
-  //   // ignore non-text-message event
-  //   return Promise.resolve(null);
-  // }
-
-  // // create a echoing text message
-  // const echo = { type: 'text', text: event.message.text };
-
-  // // use reply API
-  // return client.replyMessage(event.replyToken, echo);
 }

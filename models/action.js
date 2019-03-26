@@ -3,9 +3,10 @@ module.exports = (sequelize, DataTypes) => {
   const action = sequelize.define('action', {
     job: DataTypes.STRING,
     success: DataTypes.BOOLEAN,
-    user_id: DataTypes.INTEGER,
+    line_user_id: DataTypes.INTEGER,
     step: DataTypes.INTEGER,
-    data: DataTypes.JSONB
+    data: DataTypes.JSONB,
+    next: DataTypes.STRING,
   }, {});
   action.associate = function(models) {
     // associations can be defined here
