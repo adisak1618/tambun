@@ -132,9 +132,10 @@ module.exports = {
               "style": "primary",
               "color": "#aaaaaa",
               "action": {
-                "type": "uri",
-                "label": "Add to Cart",
-                "uri": "https://linecorp.com"
+                "type": "postback",
+                "label": "เพิ่มคะแนน",
+                "data":"addPoint",
+                "displayText": "เพิ่มคะแนน"
               }
             },
             {
@@ -145,6 +146,26 @@ module.exports = {
                 "label": "ลงทะเบียนร้านค้า",
                 "data":"registerShop",
                 "displayText": "ลงทะเบียนร้านค้า"
+              }
+            },
+            {
+              "type": "button",
+              "style": "primary",
+              "action": {
+                "type": "postback",
+                "label": "เพิ่มรางวัล",
+                "data":"addReward",
+                "displayText": "เพิ่มรางวัล"
+              }
+            },
+            {
+              "type": "button",
+              "style": "primary",
+              "action": {
+                "type": "postback",
+                "label": "แลกของรางวัล",
+                "data":"redeemReward",
+                "displayText": "แลกของรางวัล"
               }
             }
           ]

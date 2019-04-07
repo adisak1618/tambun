@@ -67,11 +67,12 @@ module.exports = (action) => {
     registerShop: {
       title: 'เริ่มลงทะเบียนร้านค้า',
       detail: 'สร้างความสัมพันธุ์กับลูกค้าของคุณผ่านไลน์ด้วยวิธีง่ายสุดๆ กับเรา'
+    },
+    addReward: {
+      title: 'เพิ่มของรางวัล',
+      detail: 'ของรางวัลสามารถแลกได้ด้วยแต้มของลูกค้าตามจำนวนแต้มที่กำหนด'
     }
   };
-  console.log('actionMenu', action in menuList)
-  console.log('action', action);
-  console.log('menuList[action]', menuList[action]);
   if(action in menuList) {
     const { title, detail } = menuList[action];
     return createMenu(title, detail, action);

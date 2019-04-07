@@ -50,9 +50,10 @@ module.exports = async (event, action, user) => {
     // colect tel
     if(event.type === 'message' && event.message.type === 'text') {
       let data = action.data || {};
-      data = Object.assign(data, { shortdescription: event.message.text});
+      data = Object.assign(data, { shortdescription: event.message.text, user_id: user.user.id });
       action.data = data;
-      action.step = 3,
+      action.step = 3;
+      action.success = true;
       action.save();
       const shop = await models.shop.create(data)
       return replyMessage(event.replyToken, [
@@ -74,6 +75,8 @@ module.exports = async (event, action, user) => {
         next: 'registerShop',
       });
       registerUser(event, newAction, user)
+    } else if (user.user.shop) {
+      return replyMessage(event.replyToken, { type: 'text', text: 'คุณได้ลงทะเบียนร้านเรียบร้อยแล้ว' });
     } else if (!action) {
       const newAction = await models.action.create({
         job: 'registerShop',

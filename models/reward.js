@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   reward.associate = function(models) {
     // associations can be defined here
+    models.reward.belongsTo(models.shop, { as: 'shop', foreignKey: 'shop_id', targetKey: 'id' });
   };
   return reward;
 };

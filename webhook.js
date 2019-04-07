@@ -7,14 +7,21 @@ const testmenu = require('./components/actionMenu');
 
 module.exports = async (event) => {
   console.log('event log', event);
+  // return replyMessage(event.replyToken, [
   const [user, created] = await models.line_user.findOrCreate({
     where: {
       lineid: event.source.userId,
     },
-    include: [{
-      model: models.user,
-      as: 'user',
-    }],
+    include: [
+      {
+        model: models.user,
+        as: 'user',
+        include: {
+          model: models.shop,
+          as: 'shop',
+        }
+      }
+    ],
     defaults: {
       lineid: event.source.userId,
     }

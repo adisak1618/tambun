@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   user.associate = function(models) {
     // associations can be defined here
-    models.user.hasOne(models.line_user, { as: 'lineUser', foreignKey: 'user_id', targetKey: 'id' })
+    models.user.hasOne(models.line_user, { as: 'lineUser', foreignKey: 'user_id', targetKey: 'id' });
+    models.user.hasOne(models.shop, { as: 'shop', foreignKey: 'user_id', targetKey: 'id' });
+    models.user.hasMany(models.user_card, { as: 'card', foreignKey: 'user_id', targetKey: 'id' });
   };
   return user;
 };

@@ -175,12 +175,10 @@ module.exports = async (event, action, user) => {
         let replyData = [
           { type: 'text', text: 'สำเร็จแล้ว คุณสามารถใช้ เบอร์โทรศัพท์ของคุณสะสมแต้มกับร้านที่ร่วมรายการได้เลย' },
         ];
-        console.log('action.next', action.next);
+        // have next job?
         if (action.next) {
           replyData = [...replyData, actionMenu(action.next)];
         }
-        console.log('replyData', replyData);
-        console.log('actionMenu(action.next)', actionMenu(action.next))
         return replyMessage(event.replyToken, replyData);
       } else {
         return replyMessage(event.replyToken, genderError);
