@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     models.shop.belongsTo(models.user, { as: 'owner', foreignKey: 'user_id', targetKey: 'id' });
     models.shop.hasMany(models.reward, { as: 'reward', foreignKey: 'shop_id', targetKey: 'id' });
+    models.shop.hasMany(models.user_card, { as: 'user_card', foreignKey: 'shop_id', targetKey: 'id' });
   };
   return shop;
 };

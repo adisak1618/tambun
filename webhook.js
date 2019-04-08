@@ -1,7 +1,8 @@
 const { replyMessage } = require('./helper');
 const models = require('./models');
 const handler = require('./handler');
-const mainMenuMsg = require('./components/message/mainmenu');
+const mainMenu = require('./components/menu/mainmenu');
+const userMenuMsg = require('./components/menu/userMenu');
 const testmenu = require('./components/actionMenu');
 // create LINE SDK client
 
@@ -28,9 +29,12 @@ module.exports = async (event) => {
   })
 
   if (event.type === 'follow') {
-    const echo = [mainMenuMsg, { type: 'text', text: 'เริ่มเก็บคะแนนกับเรา' }];
+    const echo = [{ type: 'text', text: 'สวัสดี :)' }, mainMenu(user)];
     return replyMessage(event.replyToken, echo);
   } else {
+    if (user.path !== "") {
+      return null;
+    }
     var custom_order = Object.keys(handler).reverse();
     const data = await models.action.findAndCountAll({
       where: {
@@ -60,14 +64,10 @@ module.exports = async (event) => {
           // })
           handler[name](event, null, user)
         } else {
-          return replyMessage(event.replyToken, [{ type: 'text', text: 'บางอย่างเกิดผิดพลาด' }, mainMenuMsg]);
+          return replyMessage(event.replyToken, [{ type: 'text', text: 'บางอย่างเกิดผิดพลาด' }, mainMenu(user)]);
         }
       } else {
-        if (user) {
-          return replyMessage(event.replyToken, mainMenuMsg);
-        } else {
-          return replyMessage(event.replyToken, mainMenuMsg);
-        }
+        return replyMessage(event.replyToken, mainMenu(user));
       }
     }
   }
